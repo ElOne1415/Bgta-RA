@@ -1,100 +1,157 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Bogotá Verde AR</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f5132" />
+  <title>Bogotá Verde AR | Web Augmented Reality Prototype</title>
+  <meta name="description" content="Marker-based WebAR prototype to explore and promote responsible use of public parks in Bogotá." />
+
+  <!-- A-Frame + AR.js. Requires HTTPS on mobile devices. -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+
+  <link rel="icon" href="assets/favicon.png" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="ui-panel" aria-label="Bogotá Verde AR menu">
-    <section class="brand">
-      <p class="eyebrow">Web Augmented Reality Prototype</p>
-      <h1>Bogotá Verde AR</h1>
-      <p class="hint">Scan the Hiro marker and use the menu to explore the AR content.</p>
+  <main id="appShell" aria-label="Bogotá Verde AR application">
+    <section id="startPanel" class="start-panel">
+      <div class="start-card">
+        <p class="eyebrow">Marker-based WebAR prototype</p>
+        <h1>Bogotá Verde AR</h1>
+        <p>
+          Explore Bogotá's public parks through an interactive augmented reality experience.
+          Scan the Hiro marker, move through the menu, and learn about environmental care,
+          public space rules, safety, and citizenship culture.
+        </p>
+        <div class="start-actions">
+          <button id="startBtn" class="primary-action" type="button">Start AR Experience</button>
+          <a class="secondary-action" href="marker.html" target="_blank" rel="noopener">Open Marker</a>
+          <a class="secondary-action" href="poster.html" target="_blank" rel="noopener">Poster + QR</a>
+        </div>
+        <p class="start-note">
+          Use this page on your phone. Show the marker on another screen or print it. Allow camera access when requested.
+        </p>
+      </div>
     </section>
 
-    <section class="menu" aria-label="Interactive menu">
-      <button class="menu-btn active" data-section="intro">Home</button>
-      <button class="menu-btn" data-section="map">Map</button>
-      <button class="menu-btn" data-section="simon">Simón Bolívar Park</button>
-      <button class="menu-btn" data-section="national">National Park</button>
-      <button class="menu-btn" data-section="novios">Parque de los Novios</button>
-      <button class="menu-btn" data-section="care">Environmental Care</button>
-      <button class="menu-btn" data-section="rules">Public Space Rules</button>
-      <button class="menu-btn" data-section="safety">Safety Tips</button>
-      <button class="menu-btn" data-section="quiz">Mini Quiz</button>
-    </section>
+    <section id="uiLayer" class="ui-layer" aria-live="polite">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow small">Universidad Manuela Beltrán · Diseño de Interfaces</p>
+          <h2>Bogotá Verde AR</h2>
+        </div>
+        <div id="trackingBadge" class="tracking-badge is-waiting">Searching marker</div>
+      </header>
 
-    <section id="contentCard" class="content-card" aria-live="polite">
-      <h2 id="uiTitle">Explore Bogotá's public parks</h2>
-      <p id="uiBody">Point your camera at the printed marker. A simple 3D park scene will appear with trees, benches, signs, and floating information.</p>
-    </section>
+      <aside class="side-panel" aria-label="Interactive AR menu">
+        <div class="panel-header">
+          <span class="dot"></span>
+          <strong>Interactive menu</strong>
+        </div>
+        <div id="menuButtons" class="menu-buttons"></div>
+      </aside>
 
-    <section id="quizBox" class="quiz hidden">
-      <p class="quiz-question">Which action helps protect public parks?</p>
-      <button class="answer" data-correct="false">Leaving waste on the grass</button>
-      <button class="answer" data-correct="true">Using trash bins and respecting green areas</button>
-      <button class="answer" data-correct="false">Damaging signs and benches</button>
-      <p id="quizFeedback" class="feedback"></p>
+      <section id="infoPanel" class="info-panel">
+        <p id="sectionTag" class="section-tag">Welcome</p>
+        <h3 id="sectionTitle">Explore Bogotá’s public parks</h3>
+        <p id="sectionText">
+          Point your camera at the Hiro marker to display the AR park model. Use the menu to change the content shown in the augmented scene.
+        </p>
+        <ul id="sectionBullets" class="section-bullets"></ul>
+        <div id="quizPanel" class="quiz-panel hidden"></div>
+      </section>
+
+      <footer class="bottom-help">
+        <span>Tip: keep the marker flat, visible and well lit.</span>
+        <button id="resetBtn" type="button">Reset view</button>
+      </footer>
     </section>
   </main>
 
-  <div class="marker-status" id="markerStatus">Looking for marker...</div>
-
   <a-scene
+    id="arScene"
     embedded
     vr-mode-ui="enabled: false"
-    renderer="logarithmicDepthBuffer: true; antialias: true"
-    arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;"
+    renderer="logarithmicDepthBuffer: true; antialias: true; alpha: true"
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3; trackingMethod: best;"
   >
-    <a-marker preset="hiro" id="hiroMarker" emitevents="true">
-      <!-- Ground -->
-      <a-plane color="#2f8f46" width="4" height="3" rotation="-90 0 0" position="0 0 0"></a-plane>
-      <a-plane color="#d8c08b" width="0.45" height="3" rotation="-90 0 25" position="0 0.01 0"></a-plane>
-      <a-plane color="#d8c08b" width="0.35" height="2.5" rotation="-90 0 -58" position="0.15 0.012 0"></a-plane>
+    <a-assets>
+      <a-mixin id="cardText" text="align: center; anchor: center; baseline: center; wrapCount: 32; color: #ffffff"></a-mixin>
+    </a-assets>
 
-      <!-- Trees -->
-      <a-cylinder color="#7a4a24" radius="0.05" height="0.45" position="-1.35 0.22 -0.85"></a-cylinder>
-      <a-sphere color="#176b32" radius="0.28" position="-1.35 0.58 -0.85"></a-sphere>
-      <a-cylinder color="#7a4a24" radius="0.05" height="0.45" position="1.25 0.22 -0.75"></a-cylinder>
-      <a-sphere color="#1e7d3d" radius="0.28" position="1.25 0.58 -0.75"></a-sphere>
-      <a-cylinder color="#7a4a24" radius="0.05" height="0.45" position="-1.25 0.22 0.8"></a-cylinder>
-      <a-sphere color="#1f6f37" radius="0.28" position="-1.25 0.58 0.8"></a-sphere>
-      <a-cylinder color="#7a4a24" radius="0.05" height="0.45" position="1.35 0.22 0.75"></a-cylinder>
-      <a-sphere color="#238246" radius="0.28" position="1.35 0.58 0.75"></a-sphere>
+    <a-marker id="hiroMarker" preset="hiro" emitevents="true" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
+      <a-entity id="arRoot" position="0 0 0" rotation="0 0 0" scale="1 1 1">
+        <!-- Base park model -->
+        <a-plane id="grassBase" position="0 0 0" rotation="-90 0 0" width="4.6" height="3.4" material="color: #3f8f46; roughness: 0.9; metalness: 0"></a-plane>
+        <a-plane position="0 0.012 0" rotation="-90 0 0" width="0.65" height="3.15" material="color: #c6b18c; roughness: 1"></a-plane>
+        <a-plane position="-1.45 0.018 0.62" rotation="-90 0 -30" width="0.12" height="1.9" material="color: #6bb6ff"></a-plane>
+        <a-plane position="1.5 0.018 -0.68" rotation="-90 0 -30" width="0.12" height="1.5" material="color: #6bb6ff"></a-plane>
 
-      <!-- Benches -->
-      <a-box color="#7a4a24" width="0.7" height="0.08" depth="0.18" position="-0.75 0.14 0.85"></a-box>
-      <a-box color="#5b351c" width="0.06" height="0.22" depth="0.08" position="-1.0 0.05 0.85"></a-box>
-      <a-box color="#5b351c" width="0.06" height="0.22" depth="0.08" position="-0.5 0.05 0.85"></a-box>
+        <!-- Trees -->
+        <a-entity id="treeA" position="-1.7 0.02 -1.1">
+          <a-cylinder radius="0.09" height="0.45" position="0 0.22 0" material="color: #7a4b2a"></a-cylinder>
+          <a-cone radius-bottom="0.42" radius-top="0.05" height="0.75" position="0 0.78 0" material="color: #1f6f3f"></a-cone>
+        </a-entity>
+        <a-entity id="treeB" position="1.85 0.02 1.05">
+          <a-cylinder radius="0.08" height="0.38" position="0 0.19 0" material="color: #7a4b2a"></a-cylinder>
+          <a-sphere radius="0.36" position="0 0.62 0" material="color: #2d7d46"></a-sphere>
+        </a-entity>
+        <a-entity id="treeC" position="-1.9 0.02 1.0">
+          <a-cylinder radius="0.08" height="0.38" position="0 0.19 0" material="color: #7a4b2a"></a-cylinder>
+          <a-sphere radius="0.31" position="0 0.62 0" material="color: #255f35"></a-sphere>
+        </a-entity>
 
-      <a-box color="#7a4a24" width="0.7" height="0.08" depth="0.18" position="0.75 0.14 -0.95"></a-box>
-      <a-box color="#5b351c" width="0.06" height="0.22" depth="0.08" position="0.5 0.05 -0.95"></a-box>
-      <a-box color="#5b351c" width="0.06" height="0.22" depth="0.08" position="1.0 0.05 -0.95"></a-box>
+        <!-- Benches -->
+        <a-entity id="bench1" position="-0.9 0.08 0.7" rotation="0 22 0">
+          <a-box width="0.85" height="0.08" depth="0.22" position="0 0.22 0" material="color: #7b4a23"></a-box>
+          <a-box width="0.85" height="0.08" depth="0.08" position="0 0.38 -0.12" rotation="-18 0 0" material="color: #7b4a23"></a-box>
+          <a-cylinder radius="0.025" height="0.26" position="-0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
+          <a-cylinder radius="0.025" height="0.26" position="0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
+        </a-entity>
+        <a-entity id="bench2" position="1.05 0.08 -0.75" rotation="0 -28 0">
+          <a-box width="0.85" height="0.08" depth="0.22" position="0 0.22 0" material="color: #7b4a23"></a-box>
+          <a-box width="0.85" height="0.08" depth="0.08" position="0 0.38 -0.12" rotation="-18 0 0" material="color: #7b4a23"></a-box>
+          <a-cylinder radius="0.025" height="0.26" position="-0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
+          <a-cylinder radius="0.025" height="0.26" position="0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
+        </a-entity>
 
-      <!-- Trash bin and sign -->
-      <a-cylinder color="#1e88e5" radius="0.13" height="0.35" position="0.85 0.18 0.65"></a-cylinder>
-      <a-text value="BIN" color="#ffffff" align="center" width="1.4" position="0.85 0.38 0.65" rotation="-65 0 0"></a-text>
+        <!-- Waste bins and sign -->
+        <a-entity id="bins" position="0.88 0.06 0.96">
+          <a-cylinder radius="0.1" height="0.32" position="-0.16 0.16 0" material="color: #2f80ed"></a-cylinder>
+          <a-cylinder radius="0.1" height="0.32" position="0.08 0.16 0" material="color: #27ae60"></a-cylinder>
+          <a-cylinder radius="0.1" height="0.32" position="0.32 0.16 0" material="color: #f2c94c"></a-cylinder>
+        </a-entity>
+        <a-entity id="mainSign" position="-0.05 0.06 -1.35" rotation="0 0 0">
+          <a-cylinder radius="0.025" height="0.55" position="-0.46 0.28 0" material="color: #2b2b2b"></a-cylinder>
+          <a-cylinder radius="0.025" height="0.55" position="0.46 0.28 0" material="color: #2b2b2b"></a-cylinder>
+          <a-box width="1.1" height="0.44" depth="0.04" position="0 0.58 0" material="color: #0f5132"></a-box>
+          <a-text value="BOGOTA VERDE AR" position="0 0.6 0.031" width="2.7" align="center" color="#ffffff"></a-text>
+        </a-entity>
 
-      <a-box color="#ffffff" width="0.75" height="0.42" depth="0.04" position="0 0.55 -1.18"></a-box>
-      <a-cylinder color="#444444" radius="0.025" height="0.65" position="0 0.28 -1.18"></a-cylinder>
-      <a-text id="signText" value="PUBLIC PARK" color="#1b5e20" align="center" width="1.3" position="0 0.58 -1.21" rotation="0 0 0"></a-text>
+        <!-- Floating AR content card -->
+        <a-entity id="contentCard" position="0 1.85 0.15" rotation="-55 0 0">
+          <a-plane id="cardBack" width="3.25" height="1.52" material="color: #0f5132; opacity: 0.94; transparent: true"></a-plane>
+          <a-text id="arTitle" value="Bogota Verde AR" position="0 0.48 0.02" width="3.0" align="center" color="#ffffff"></a-text>
+          <a-text id="arSubtitle" value="Point the camera at the marker" position="0 0.18 0.02" width="2.85" align="center" color="#d9f99d"></a-text>
+          <a-text id="arBody" value="Use the interactive menu to explore parks, rules, safety and environmental care." position="0 -0.24 0.02" width="2.85" align="center" color="#ffffff" wrap-count="44"></a-text>
+        </a-entity>
 
-      <!-- AR information panel -->
-      <a-plane id="infoPanel" color="#ffffff" opacity="0.92" width="3.35" height="0.95" position="0 0.88 1.12" rotation="-58 0 0"></a-plane>
-      <a-text id="arTitle" value="Bogotá Verde AR" color="#145a32" align="center" width="3" position="0 1.17 0.82" rotation="-58 0 0"></a-text>
-      <a-text id="arBody" value="Use the menu to discover parks, care rules and safety tips." color="#1f2937" align="center" width="2.95" position="0 0.98 0.93" rotation="-58 0 0"></a-text>
-
-      <!-- Floating icons -->
-      <a-sphere id="iconCare" color="#4caf50" radius="0.11" position="-1.55 0.82 0.1"></a-sphere>
-      <a-text value="Care" color="#ffffff" align="center" width="1.5" position="-1.55 1.02 0.1" rotation="-45 0 0"></a-text>
-      <a-sphere id="iconRules" color="#ffb300" radius="0.11" position="1.55 0.82 0.1"></a-sphere>
-      <a-text value="Rules" color="#ffffff" align="center" width="1.5" position="1.55 1.02 0.1" rotation="-45 0 0"></a-text>
-      <a-sphere id="iconSafety" color="#e53935" radius="0.11" position="0 0.9 -0.65"></a-sphere>
-      <a-text value="Safety" color="#ffffff" align="center" width="1.5" position="0 1.1 -0.65" rotation="-45 0 0"></a-text>
+        <!-- Map pins / floating icons -->
+        <a-entity id="pinA" position="-1.25 0.95 -0.18">
+          <a-sphere radius="0.12" material="color: #ff5a5f"></a-sphere>
+          <a-text value="Simon Bolivar" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
+        </a-entity>
+        <a-entity id="pinB" position="0.2 0.92 0.45">
+          <a-sphere radius="0.12" material="color: #ffd166"></a-sphere>
+          <a-text value="National Park" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
+        </a-entity>
+        <a-entity id="pinC" position="1.28 0.92 -0.15">
+          <a-sphere radius="0.12" material="color: #6fffe9"></a-sphere>
+          <a-text value="Los Novios" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
+        </a-entity>
+      </a-entity>
     </a-marker>
 
     <a-entity camera></a-entity>

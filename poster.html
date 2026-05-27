@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Poster + QR | Bogotá Verde AR</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #102018;
+      background: #e7f5ec;
+    }
+    .poster-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+    .poster {
+      width: min(1000px, 100%);
+      min-height: 640px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(217,249,157,.9), transparent 30%),
+        radial-gradient(circle at 90% 10%, rgba(96,165,250,.38), transparent 30%),
+        linear-gradient(135deg, #052e1a, #0f5132 48%, #113c2a);
+      color: #fff;
+      box-shadow: 0 25px 80px rgba(15,23,42,.22);
+      padding: clamp(24px, 5vw, 52px);
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 28px;
+      align-items: center;
+    }
+    .poster::after {
+      content: "";
+      position: absolute;
+      right: -140px;
+      bottom: -180px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      border: 70px solid rgba(217,249,157,.12);
+      pointer-events: none;
+    }
+    .poster-content { position: relative; z-index: 2; }
+    .course {
+      color: #d9f99d;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      font-weight: 900;
+      font-size: .78rem;
+      margin: 0 0 10px;
+    }
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(3rem, 10vw, 6.8rem);
+      line-height: .88;
+      letter-spacing: -.08em;
+    }
+    .subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.5;
+      color: rgba(255,255,255,.84);
+      max-width: 620px;
+      margin: 0 0 24px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 680px;
+    }
+    .feature {
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 84px;
+    }
+    .feature strong { display: block; margin-bottom: 4px; color: #d9f99d; }
+    .feature span { color: rgba(255,255,255,.78); font-size: .95rem; line-height: 1.35; }
+    .poster-side {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 16px;
+    }
+    .qr-box, .marker-box {
+      background: #fff;
+      color: #0f172a;
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.2);
+      text-align: center;
+    }
+    .qr-box h2, .marker-box h2 { margin: 0 0 10px; color: #052e1a; font-size: 1.1rem; }
+    #qrcode { display: grid; place-items: center; min-height: 220px; }
+    #qrcode img { width: 220px; height: 220px; }
+    .url { overflow-wrap: anywhere; color: #475569; font-size: .82rem; margin: 10px 0 0; }
+    .mini-marker {
+      width: min(210px, 100%);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      border: 9px solid #000;
+      display: grid;
+      place-items: center;
+      background: #000;
+    }
+    .mini-marker .inner {
+      width: 58%;
+      height: 58%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      color: #000;
+      font-size: 52px;
+      font-weight: 1000;
+      letter-spacing: -.06em;
+    }
+    .actions {
+      width: min(1000px, 100%);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .actions button, .actions a {
+      border: 0;
+      background: #0f5132;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    @media (max-width: 840px) {
+      .poster { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+    @media print {
+      body { background: #fff; }
+      .poster-page { padding: 0; }
+      .poster { box-shadow: none; border-radius: 0; min-height: 100vh; }
+      .actions { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="poster-page">
+    <section class="poster">
+      <div class="poster-content">
+        <p class="course">Augmented Reality · Interface Experimentation</p>
+        <h1>Bogotá<br>Verde AR</h1>
+        <p class="subtitle">
+          A marker-based WebAR learning object for exploring Bogotá's public parks, environmental care,
+          public space rules and safe citizenship practices.
+        </p>
+        <div class="feature-grid">
+          <div class="feature"><strong>Interactive AR object</strong><span>3D park model with floating learning cards.</span></div>
+          <div class="feature"><strong>Educational content</strong><span>Environmental care, rules, safety and orientation.</span></div>
+          <div class="feature"><strong>Mobile access</strong><span>Scan the QR code and allow camera access.</span></div>
+          <div class="feature"><strong>Evaluation</strong><span>Mini quiz for quick learning validation.</span></div>
+        </div>
+      </div>
+      <aside class="poster-side">
+        <div class="qr-box">
+          <h2>Scan to open the AR prototype</h2>
+          <div id="qrcode"></div>
+          <p id="urlText" class="url"></p>
+        </div>
+        <div class="marker-box">
+          <h2>Use this marker</h2>
+          <div class="mini-marker" aria-label="Mini Hiro marker"><div class="inner">Hiro</div></div>
+        </div>
+      </aside>
+    </section>
+    <div class="actions">
+      <a href="index.html">Open AR experience</a>
+      <a href="marker.html">Open full marker</a>
+      <button type="button" onclick="window.print()">Print poster</button>
+    </div>
+  </main>
+  <script>
+    const targetUrl = new URL('index.html', location.href).href;
+    document.getElementById('urlText').textContent = targetUrl;
+    const qrContainer = document.getElementById('qrcode');
+    if (window.QRCode) {
+      new QRCode(qrContainer, {
+        text: targetUrl,
+        width: 220,
+        height: 220,
+        colorDark: '#052e1a',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    } else {
+      qrContainer.textContent = 'QR generator could not load. Use the URL below.';
+    }
+  </script>
+</body>
+</html>
