@@ -1,0 +1,150 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+  background: #0f172a;
+  color: #0f172a;
+}
+
+.ui-panel {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: min(370px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+}
+
+.brand h1 {
+  margin: 4px 0 6px;
+  font-size: 1.45rem;
+  color: #145a32;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #2e7d32;
+  text-transform: uppercase;
+}
+
+.hint {
+  margin: 0 0 12px;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: #334155;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.menu-btn,
+.answer {
+  border: 0;
+  border-radius: 12px;
+  padding: 9px 10px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #e8f5e9;
+  color: #145a32;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.menu-btn:hover,
+.answer:hover {
+  transform: translateY(-1px);
+}
+
+.menu-btn.active {
+  background: #1b5e20;
+  color: #ffffff;
+}
+
+.content-card,
+.quiz {
+  border: 1px solid #dbe7df;
+  border-radius: 14px;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+.content-card h2 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: #145a32;
+}
+
+.content-card p,
+.quiz p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #334155;
+}
+
+.quiz {
+  margin-top: 10px;
+}
+
+.quiz-question {
+  font-weight: 700;
+  margin-bottom: 8px !important;
+}
+
+.answer {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+  text-align: left;
+}
+
+.feedback {
+  margin-top: 8px !important;
+  font-weight: 700;
+}
+
+.hidden {
+  display: none;
+}
+
+.marker-status {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 11;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+@media (max-width: 540px) {
+  .ui-panel {
+    top: 8px;
+    left: 8px;
+    width: calc(100vw - 16px);
+    max-height: 45vh;
+  }
+
+  .menu {
+    grid-template-columns: 1fr;
+  }
+}
