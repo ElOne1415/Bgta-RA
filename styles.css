@@ -416,3 +416,53 @@ body.is-started .ui-layer { opacity: 1; }
   .section-bullets { display: none; }
   .info-panel { max-height: 38vh; overflow: auto; }
 }
+
+/* Camera visibility fix for iOS/Android WebAR */
+#sceneMount {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+body.is-started::before {
+  opacity: 0;
+}
+
+a-scene,
+.a-canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+video,
+.arjs-video,
+#arjs-video {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover !important;
+  z-index: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  background: #000 !important;
+}
+
+.tracking-badge.is-error {
+  background: rgba(239, 68, 68, 0.30);
+  color: #fee2e2;
+}
+
+body:not(.is-started) .ui-layer {
+  opacity: 0;
+}
+
+body.is-started .ui-layer {
+  opacity: 1;
+}

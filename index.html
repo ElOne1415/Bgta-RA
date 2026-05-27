@@ -7,7 +7,7 @@
   <title>Bogotá Verde AR | Web Augmented Reality Prototype</title>
   <meta name="description" content="Marker-based WebAR prototype to explore and promote responsible use of public parks in Bogotá." />
 
-  <!-- A-Frame + AR.js. Requires HTTPS on mobile devices. -->
+  <!-- A-Frame + AR.js. Mobile camera requires HTTPS and a real browser tab. -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
 
@@ -28,10 +28,11 @@
         <div class="start-actions">
           <button id="startBtn" class="primary-action" type="button">Start AR Experience</button>
           <a class="secondary-action" href="marker.html" target="_blank" rel="noopener">Open Marker</a>
+          <a class="secondary-action" href="camera-test.html" target="_blank" rel="noopener">Camera Test</a>
           <a class="secondary-action" href="poster.html" target="_blank" rel="noopener">Poster + QR</a>
         </div>
         <p class="start-note">
-          Use this page on your phone. Show the marker on another screen or print it. Allow camera access when requested.
+          Open this page in Safari or Chrome, not inside WhatsApp, Instagram, Facebook or a translated page. Allow camera access when requested.
         </p>
       </div>
     </section>
@@ -42,7 +43,7 @@
           <p class="eyebrow small">Universidad Manuela Beltrán · Diseño de Interfaces</p>
           <h2>Bogotá Verde AR</h2>
         </div>
-        <div id="trackingBadge" class="tracking-badge is-waiting">Searching marker</div>
+        <div id="trackingBadge" class="tracking-badge is-waiting">Tap Start</div>
       </header>
 
       <aside class="side-panel" aria-label="Interactive AR menu">
@@ -57,105 +58,104 @@
         <p id="sectionTag" class="section-tag">Welcome</p>
         <h3 id="sectionTitle">Explore Bogotá’s public parks</h3>
         <p id="sectionText">
-          Point your camera at the Hiro marker to display the AR park model. Use the menu to change the content shown in the augmented scene.
+          Tap Start AR Experience, allow camera access, and point your phone at the Hiro marker.
         </p>
         <ul id="sectionBullets" class="section-bullets"></ul>
         <div id="quizPanel" class="quiz-panel hidden"></div>
       </section>
 
       <footer class="bottom-help">
-        <span>Tip: keep the marker flat, visible and well lit.</span>
+        <span id="helpText">Tip: use Safari/Chrome, HTTPS, no translator, and good light.</span>
         <button id="resetBtn" type="button">Reset view</button>
       </footer>
     </section>
   </main>
 
-  <a-scene
-    id="arScene"
-    embedded
-    vr-mode-ui="enabled: false"
-    renderer="logarithmicDepthBuffer: true; antialias: true; alpha: true"
-    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3; trackingMethod: best;"
-  >
-    <a-assets>
-      <a-mixin id="cardText" text="align: center; anchor: center; baseline: center; wrapCount: 32; color: #ffffff"></a-mixin>
-    </a-assets>
+  <div id="sceneMount" aria-hidden="true"></div>
 
-    <a-marker id="hiroMarker" preset="hiro" emitevents="true" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-      <a-entity id="arRoot" position="0 0 0" rotation="0 0 0" scale="1 1 1">
-        <!-- Base park model -->
-        <a-plane id="grassBase" position="0 0 0" rotation="-90 0 0" width="4.6" height="3.4" material="color: #3f8f46; roughness: 0.9; metalness: 0"></a-plane>
-        <a-plane position="0 0.012 0" rotation="-90 0 0" width="0.65" height="3.15" material="color: #c6b18c; roughness: 1"></a-plane>
-        <a-plane position="-1.45 0.018 0.62" rotation="-90 0 -30" width="0.12" height="1.9" material="color: #6bb6ff"></a-plane>
-        <a-plane position="1.5 0.018 -0.68" rotation="-90 0 -30" width="0.12" height="1.5" material="color: #6bb6ff"></a-plane>
+  <template id="arSceneTemplate">
+    <a-scene
+      id="arScene"
+      embedded
+      vr-mode-ui="enabled: false"
+      renderer="logarithmicDepthBuffer: true; antialias: true; alpha: true"
+      arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 1280; displayHeight: 720; debugUIEnabled: false; detectionMode: mono; trackingMethod: best;"
+    >
+      <a-assets>
+        <a-mixin id="cardText" text="align: center; anchor: center; baseline: center; wrapCount: 32; color: #ffffff"></a-mixin>
+      </a-assets>
 
-        <!-- Trees -->
-        <a-entity id="treeA" position="-1.7 0.02 -1.1">
-          <a-cylinder radius="0.09" height="0.45" position="0 0.22 0" material="color: #7a4b2a"></a-cylinder>
-          <a-cone radius-bottom="0.42" radius-top="0.05" height="0.75" position="0 0.78 0" material="color: #1f6f3f"></a-cone>
-        </a-entity>
-        <a-entity id="treeB" position="1.85 0.02 1.05">
-          <a-cylinder radius="0.08" height="0.38" position="0 0.19 0" material="color: #7a4b2a"></a-cylinder>
-          <a-sphere radius="0.36" position="0 0.62 0" material="color: #2d7d46"></a-sphere>
-        </a-entity>
-        <a-entity id="treeC" position="-1.9 0.02 1.0">
-          <a-cylinder radius="0.08" height="0.38" position="0 0.19 0" material="color: #7a4b2a"></a-cylinder>
-          <a-sphere radius="0.31" position="0 0.62 0" material="color: #255f35"></a-sphere>
-        </a-entity>
+      <a-marker id="hiroMarker" preset="hiro" emitevents="true" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
+        <a-entity id="arRoot" position="0 0 0" rotation="0 0 0" scale="1 1 1">
+          <a-plane id="grassBase" position="0 0 0" rotation="-90 0 0" width="4.6" height="3.4" material="color: #3f8f46; roughness: 0.9; metalness: 0"></a-plane>
+          <a-plane position="0 0.012 0" rotation="-90 0 0" width="0.65" height="3.15" material="color: #c6b18c; roughness: 1"></a-plane>
+          <a-plane position="-1.45 0.018 0.62" rotation="-90 0 -30" width="0.12" height="1.9" material="color: #6bb6ff"></a-plane>
+          <a-plane position="1.5 0.018 -0.68" rotation="-90 0 -30" width="0.12" height="1.5" material="color: #6bb6ff"></a-plane>
 
-        <!-- Benches -->
-        <a-entity id="bench1" position="-0.9 0.08 0.7" rotation="0 22 0">
-          <a-box width="0.85" height="0.08" depth="0.22" position="0 0.22 0" material="color: #7b4a23"></a-box>
-          <a-box width="0.85" height="0.08" depth="0.08" position="0 0.38 -0.12" rotation="-18 0 0" material="color: #7b4a23"></a-box>
-          <a-cylinder radius="0.025" height="0.26" position="-0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
-          <a-cylinder radius="0.025" height="0.26" position="0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
-        </a-entity>
-        <a-entity id="bench2" position="1.05 0.08 -0.75" rotation="0 -28 0">
-          <a-box width="0.85" height="0.08" depth="0.22" position="0 0.22 0" material="color: #7b4a23"></a-box>
-          <a-box width="0.85" height="0.08" depth="0.08" position="0 0.38 -0.12" rotation="-18 0 0" material="color: #7b4a23"></a-box>
-          <a-cylinder radius="0.025" height="0.26" position="-0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
-          <a-cylinder radius="0.025" height="0.26" position="0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
-        </a-entity>
+          <a-entity id="treeA" position="-1.7 0.02 -1.1">
+            <a-cylinder radius="0.09" height="0.45" position="0 0.22 0" material="color: #7a4b2a"></a-cylinder>
+            <a-cone radius-bottom="0.42" radius-top="0.05" height="0.75" position="0 0.78 0" material="color: #1f6f3f"></a-cone>
+          </a-entity>
+          <a-entity id="treeB" position="1.85 0.02 1.05">
+            <a-cylinder radius="0.08" height="0.38" position="0 0.19 0" material="color: #7a4b2a"></a-cylinder>
+            <a-sphere radius="0.36" position="0 0.62 0" material="color: #2d7d46"></a-sphere>
+          </a-entity>
+          <a-entity id="treeC" position="-1.9 0.02 1.0">
+            <a-cylinder radius="0.08" height="0.38" position="0 0.19 0" material="color: #7a4b2a"></a-cylinder>
+            <a-sphere radius="0.31" position="0 0.62 0" material="color: #255f35"></a-sphere>
+          </a-entity>
 
-        <!-- Waste bins and sign -->
-        <a-entity id="bins" position="0.88 0.06 0.96">
-          <a-cylinder radius="0.1" height="0.32" position="-0.16 0.16 0" material="color: #2f80ed"></a-cylinder>
-          <a-cylinder radius="0.1" height="0.32" position="0.08 0.16 0" material="color: #27ae60"></a-cylinder>
-          <a-cylinder radius="0.1" height="0.32" position="0.32 0.16 0" material="color: #f2c94c"></a-cylinder>
-        </a-entity>
-        <a-entity id="mainSign" position="-0.05 0.06 -1.35" rotation="0 0 0">
-          <a-cylinder radius="0.025" height="0.55" position="-0.46 0.28 0" material="color: #2b2b2b"></a-cylinder>
-          <a-cylinder radius="0.025" height="0.55" position="0.46 0.28 0" material="color: #2b2b2b"></a-cylinder>
-          <a-box width="1.1" height="0.44" depth="0.04" position="0 0.58 0" material="color: #0f5132"></a-box>
-          <a-text value="BOGOTA VERDE AR" position="0 0.6 0.031" width="2.7" align="center" color="#ffffff"></a-text>
-        </a-entity>
+          <a-entity id="bench1" position="-0.9 0.08 0.7" rotation="0 22 0">
+            <a-box width="0.85" height="0.08" depth="0.22" position="0 0.22 0" material="color: #7b4a23"></a-box>
+            <a-box width="0.85" height="0.08" depth="0.08" position="0 0.38 -0.12" rotation="-18 0 0" material="color: #7b4a23"></a-box>
+            <a-cylinder radius="0.025" height="0.26" position="-0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
+            <a-cylinder radius="0.025" height="0.26" position="0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
+          </a-entity>
+          <a-entity id="bench2" position="1.05 0.08 -0.75" rotation="0 -28 0">
+            <a-box width="0.85" height="0.08" depth="0.22" position="0 0.22 0" material="color: #7b4a23"></a-box>
+            <a-box width="0.85" height="0.08" depth="0.08" position="0 0.38 -0.12" rotation="-18 0 0" material="color: #7b4a23"></a-box>
+            <a-cylinder radius="0.025" height="0.26" position="-0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
+            <a-cylinder radius="0.025" height="0.26" position="0.28 0.1 0.08" material="color: #2b2b2b"></a-cylinder>
+          </a-entity>
 
-        <!-- Floating AR content card -->
-        <a-entity id="contentCard" position="0 1.85 0.15" rotation="-55 0 0">
-          <a-plane id="cardBack" width="3.25" height="1.52" material="color: #0f5132; opacity: 0.94; transparent: true"></a-plane>
-          <a-text id="arTitle" value="Bogota Verde AR" position="0 0.48 0.02" width="3.0" align="center" color="#ffffff"></a-text>
-          <a-text id="arSubtitle" value="Point the camera at the marker" position="0 0.18 0.02" width="2.85" align="center" color="#d9f99d"></a-text>
-          <a-text id="arBody" value="Use the interactive menu to explore parks, rules, safety and environmental care." position="0 -0.24 0.02" width="2.85" align="center" color="#ffffff" wrap-count="44"></a-text>
-        </a-entity>
+          <a-entity id="bins" position="0.88 0.06 0.96">
+            <a-cylinder radius="0.1" height="0.32" position="-0.16 0.16 0" material="color: #2f80ed"></a-cylinder>
+            <a-cylinder radius="0.1" height="0.32" position="0.08 0.16 0" material="color: #27ae60"></a-cylinder>
+            <a-cylinder radius="0.1" height="0.32" position="0.32 0.16 0" material="color: #f2c94c"></a-cylinder>
+          </a-entity>
 
-        <!-- Map pins / floating icons -->
-        <a-entity id="pinA" position="-1.25 0.95 -0.18">
-          <a-sphere radius="0.12" material="color: #ff5a5f"></a-sphere>
-          <a-text value="Simon Bolivar" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
-        </a-entity>
-        <a-entity id="pinB" position="0.2 0.92 0.45">
-          <a-sphere radius="0.12" material="color: #ffd166"></a-sphere>
-          <a-text value="National Park" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
-        </a-entity>
-        <a-entity id="pinC" position="1.28 0.92 -0.15">
-          <a-sphere radius="0.12" material="color: #6fffe9"></a-sphere>
-          <a-text value="Los Novios" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
-        </a-entity>
-      </a-entity>
-    </a-marker>
+          <a-entity id="mainSign" position="-0.05 0.06 -1.35">
+            <a-cylinder radius="0.025" height="0.55" position="-0.46 0.28 0" material="color: #2b2b2b"></a-cylinder>
+            <a-cylinder radius="0.025" height="0.55" position="0.46 0.28 0" material="color: #2b2b2b"></a-cylinder>
+            <a-box width="1.1" height="0.44" depth="0.04" position="0 0.58 0" material="color: #0f5132"></a-box>
+            <a-text value="BOGOTA VERDE AR" position="0 0.6 0.031" width="2.7" align="center" color="#ffffff"></a-text>
+          </a-entity>
 
-    <a-entity camera></a-entity>
-  </a-scene>
+          <a-entity id="contentCard" position="0 1.85 0.15" rotation="-55 0 0">
+            <a-plane id="cardBack" width="3.25" height="1.52" material="color: #0f5132; opacity: 0.94; transparent: true"></a-plane>
+            <a-text id="arTitle" value="Bogota Verde AR" position="0 0.48 0.02" width="3.0" align="center" color="#ffffff"></a-text>
+            <a-text id="arSubtitle" value="Point the camera at the marker" position="0 0.18 0.02" width="2.85" align="center" color="#d9f99d"></a-text>
+            <a-text id="arBody" value="Use the interactive menu to explore parks, rules, safety and environmental care." position="0 -0.24 0.02" width="2.85" align="center" color="#ffffff" wrap-count="44"></a-text>
+          </a-entity>
+
+          <a-entity id="pinA" position="-1.25 0.95 -0.18">
+            <a-sphere radius="0.12" material="color: #ff5a5f"></a-sphere>
+            <a-text value="Simon Bolivar" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
+          </a-entity>
+          <a-entity id="pinB" position="0.2 0.92 0.45">
+            <a-sphere radius="0.12" material="color: #ffd166"></a-sphere>
+            <a-text value="National Park" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
+          </a-entity>
+          <a-entity id="pinC" position="1.28 0.92 -0.15">
+            <a-sphere radius="0.12" material="color: #6fffe9"></a-sphere>
+            <a-text value="Los Novios" position="0 0.24 0" width="1.7" align="center" color="#ffffff"></a-text>
+          </a-entity>
+        </a-entity>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+  </template>
 
   <script src="app.js"></script>
 </body>

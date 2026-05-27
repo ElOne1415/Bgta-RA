@@ -6,7 +6,7 @@ const sections = {
     arTitle: "Bogota Verde AR",
     arSubtitle: "Marker-based Web Augmented Reality",
     arBody: "Move through the menu to explore parks, environmental care, public space rules, safety tips and a mini quiz.",
-    text: "Point your camera at the Hiro marker to display the AR park model. Use the menu to change the content shown in the augmented scene.",
+    text: "Tap Start AR Experience, allow camera access, and point your phone at the Hiro marker. The 3D park scene appears anchored to the marker.",
     bullets: ["Web-based experience", "No app installation required", "Designed for mobile devices and classroom presentation"],
     color: "#0f5132",
     pins: true
@@ -111,35 +111,17 @@ const sections = {
 };
 
 const quizQuestions = [
-  {
-    q: "What should you do with waste in a public park?",
-    options: ["Leave it near a tree", "Use the correct bin", "Hide it under a bench"],
-    correct: 1,
-    feedback: "Correct. Responsible waste management protects the park and other visitors."
-  },
-  {
-    q: "Which behavior helps protect green areas?",
-    options: ["Walking only on permitted paths", "Damaging plants for photos", "Feeding all animals"],
-    correct: 0,
-    feedback: "Correct. Using permitted paths reduces damage to gardens and vegetation."
-  },
-  {
-    q: "What is a safe action during a visit?",
-    options: ["Ignore signage", "Identify meeting points", "Go alone to isolated zones at night"],
-    correct: 1,
-    feedback: "Correct. Meeting points and signs improve orientation and safety."
-  },
-  {
-    q: "Why is AR useful in this project?",
-    options: ["It only decorates the page", "It turns information into interactive visual learning", "It replaces all park rules"],
-    correct: 1,
-    feedback: "Correct. AR supports visual, interactive and contextual learning."
-  }
+  { q: "What should you do with waste in a public park?", options: ["Leave it near a tree", "Use the correct bin", "Hide it under a bench"], correct: 1, feedback: "Correct. Responsible waste management protects the park and other visitors." },
+  { q: "Which behavior helps protect green areas?", options: ["Walking only on permitted paths", "Damaging plants for photos", "Feeding all animals"], correct: 0, feedback: "Correct. Using permitted paths reduces damage to gardens and vegetation." },
+  { q: "What is a safe action during a visit?", options: ["Ignore signage", "Identify meeting points", "Go alone to isolated zones at night"], correct: 1, feedback: "Correct. Meeting points and signs improve orientation and safety." },
+  { q: "Why is AR useful in this project?", options: ["It only decorates the page", "It turns information into interactive visual learning", "It replaces all park rules"], correct: 1, feedback: "Correct. AR supports visual, interactive and contextual learning." }
 ];
 
 let currentSection = "welcome";
 let quizIndex = 0;
 let quizAnswered = false;
+let sceneStarted = false;
+let cameraCheckTimer = null;
 
 const startPanel = document.getElementById("startPanel");
 const startBtn = document.getElementById("startBtn");
@@ -147,40 +129,79 @@ const resetBtn = document.getElementById("resetBtn");
 const menuButtons = document.getElementById("menuButtons");
 const trackingBadge = document.getElementById("trackingBadge");
 const quizPanel = document.getElementById("quizPanel");
+const sceneMount = document.getElementById("sceneMount");
+const sceneTemplate = document.getElementById("arSceneTemplate");
+const helpText = document.getElementById("helpText");
 
 const ui = {
   tag: document.getElementById("sectionTag"),
   title: document.getElementById("sectionTitle"),
   text: document.getElementById("sectionText"),
   bullets: document.getElementById("sectionBullets"),
-  arTitle: document.getElementById("arTitle"),
-  arSubtitle: document.getElementById("arSubtitle"),
-  arBody: document.getElementById("arBody"),
-  cardBack: document.getElementById("cardBack"),
-  grassBase: document.getElementById("grassBase"),
-  pins: [document.getElementById("pinA"), document.getElementById("pinB"), document.getElementById("pinC")],
-  pinA: document.getElementById("pinA"),
-  pinB: document.getElementById("pinB"),
-  pinC: document.getElementById("pinC"),
-  arRoot: document.getElementById("arRoot")
+  arTitle: null,
+  arSubtitle: null,
+  arBody: null,
+  cardBack: null,
+  grassBase: null,
+  pins: [],
+  arRoot: null
 };
 
 function init() {
   createMenu();
   setSection("welcome");
-  bindMarkerEvents();
 
-  startBtn.addEventListener("click", () => {
-    startPanel.classList.add("hidden");
-    document.body.classList.add("is-started");
-    setTimeout(() => setTracking("waiting"), 300);
-  });
-
+  startBtn.addEventListener("click", startExperience, { once: true });
   resetBtn.addEventListener("click", () => setSection("welcome"));
 
   if (location.protocol !== "https:" && !location.hostname.includes("localhost")) {
-    startPanel.querySelector(".start-note").textContent = "Warning: camera access on mobile requires HTTPS. Upload this project to GitHub Pages before testing on a phone.";
+    startPanel.querySelector(".start-note").textContent = "Camera access on mobile requires HTTPS. Upload this project to GitHub Pages before testing on a phone.";
   }
+}
+
+function startExperience() {
+  document.body.classList.add("is-started");
+  startPanel.classList.add("hidden");
+  setTracking("starting");
+  helpText.textContent = "If the camera is black, open this page directly in Safari/Chrome and disable page translation.";
+  mountScene();
+}
+
+function mountScene() {
+  if (sceneStarted) return;
+  sceneStarted = true;
+  sceneMount.appendChild(sceneTemplate.content.cloneNode(true));
+
+  const scene = document.getElementById("arScene");
+  scene.addEventListener("loaded", () => {
+    bindArRefs();
+    bindMarkerEvents();
+    setSection(currentSection);
+    setTracking("waiting");
+    forceCameraVideoVisible();
+    startCameraDiagnostics();
+  });
+
+  // In case the scene loaded event fires very quickly on some mobile browsers.
+  setTimeout(() => {
+    if (!ui.arRoot) {
+      bindArRefs();
+      bindMarkerEvents();
+      setSection(currentSection);
+      forceCameraVideoVisible();
+      startCameraDiagnostics();
+    }
+  }, 1400);
+}
+
+function bindArRefs() {
+  ui.arTitle = document.getElementById("arTitle");
+  ui.arSubtitle = document.getElementById("arSubtitle");
+  ui.arBody = document.getElementById("arBody");
+  ui.cardBack = document.getElementById("cardBack");
+  ui.grassBase = document.getElementById("grassBase");
+  ui.pins = [document.getElementById("pinA"), document.getElementById("pinB"), document.getElementById("pinC")].filter(Boolean);
+  ui.arRoot = document.getElementById("arRoot");
 }
 
 function createMenu() {
@@ -203,13 +224,15 @@ function setSection(key) {
   ui.text.textContent = section.text;
   ui.bullets.innerHTML = section.bullets.map(item => `<li>${item}</li>`).join("");
 
-  ui.arTitle.setAttribute("value", section.arTitle);
-  ui.arSubtitle.setAttribute("value", section.arSubtitle);
-  ui.arBody.setAttribute("value", section.arBody);
-  ui.cardBack.setAttribute("material", `color: ${section.color}; opacity: 0.94; transparent: true`);
+  if (ui.arTitle && ui.cardBack) {
+    ui.arTitle.setAttribute("value", section.arTitle);
+    ui.arSubtitle.setAttribute("value", section.arSubtitle);
+    ui.arBody.setAttribute("value", section.arBody);
+    ui.cardBack.setAttribute("material", `color: ${section.color}; opacity: 0.94; transparent: true`);
+    setPins(section);
+    animateRoot();
+  }
 
-  setPins(section);
-  animateRoot();
   updateMenuState(key);
 
   if (section.quiz) {
@@ -224,6 +247,7 @@ function setSection(key) {
 }
 
 function setPins(section) {
+  if (!ui.pins.length) return;
   ui.pins.forEach(pin => {
     pin.setAttribute("visible", section.pins || section.focus ? "true" : "false");
     pin.setAttribute("scale", "0.85 0.85 0.85");
@@ -234,8 +258,10 @@ function setPins(section) {
       if (pin.id !== section.focus) pin.setAttribute("visible", "false");
     });
     const focused = document.getElementById(section.focus);
-    focused.setAttribute("visible", "true");
-    focused.setAttribute("scale", "1.35 1.35 1.35");
+    if (focused) {
+      focused.setAttribute("visible", "true");
+      focused.setAttribute("scale", "1.35 1.35 1.35");
+    }
   }
 }
 
@@ -246,6 +272,7 @@ function updateMenuState(key) {
 }
 
 function animateRoot() {
+  if (!ui.arRoot) return;
   ui.arRoot.removeAttribute("animation__pulse");
   ui.arRoot.setAttribute("animation__pulse", {
     property: "scale",
@@ -302,22 +329,67 @@ function answerQuiz(answerIndex) {
 
 function bindMarkerEvents() {
   const marker = document.getElementById("hiroMarker");
+  if (!marker || marker.dataset.bound) return;
+  marker.dataset.bound = "true";
   marker.addEventListener("markerFound", () => setTracking("visible"));
   marker.addEventListener("markerLost", () => setTracking("lost"));
 }
 
 function setTracking(state) {
   trackingBadge.className = "tracking-badge";
-  if (state === "visible") {
+  if (state === "starting") {
+    trackingBadge.textContent = "Starting camera";
+    trackingBadge.classList.add("is-waiting");
+  } else if (state === "visible") {
     trackingBadge.textContent = "Marker detected";
     trackingBadge.classList.add("is-visible");
   } else if (state === "lost") {
     trackingBadge.textContent = "Marker lost";
     trackingBadge.classList.add("is-lost");
+  } else if (state === "camera-error") {
+    trackingBadge.textContent = "Camera not visible";
+    trackingBadge.classList.add("is-error");
   } else {
     trackingBadge.textContent = "Searching marker";
     trackingBadge.classList.add("is-waiting");
   }
+}
+
+function forceCameraVideoVisible() {
+  const apply = () => {
+    document.querySelectorAll("video, .arjs-video, #arjs-video").forEach(video => {
+      video.setAttribute("playsinline", "true");
+      video.setAttribute("webkit-playsinline", "true");
+      Object.assign(video.style, {
+        position: "fixed",
+        top: "0",
+        left: "0",
+        width: "100vw",
+        height: "100vh",
+        objectFit: "cover",
+        zIndex: "0",
+        opacity: "1",
+        visibility: "visible",
+        display: "block",
+        background: "#000"
+      });
+    });
+  };
+  apply();
+  const interval = setInterval(apply, 800);
+  setTimeout(() => clearInterval(interval), 10000);
+}
+
+function startCameraDiagnostics() {
+  clearTimeout(cameraCheckTimer);
+  cameraCheckTimer = setTimeout(() => {
+    const video = Array.from(document.querySelectorAll("video")).find(v => v.videoWidth > 0 || v.readyState >= 2);
+    if (!video) {
+      setTracking("camera-error");
+      helpText.textContent = "Camera did not start. Open directly in Safari/Chrome, turn off translation, then reload and allow camera again.";
+      ui.text.textContent = "The AR interface loaded, but the camera video is not visible. This usually happens when the page is opened inside an app browser, translated page, or a browser blocks the webcam. Use the Camera Test button to verify the phone camera first.";
+    }
+  }, 6500);
 }
 
 document.addEventListener("DOMContentLoaded", init);
