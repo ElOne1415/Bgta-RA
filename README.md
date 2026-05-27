@@ -1,18 +1,28 @@
-# Bogotá Verde AR - Fixed GitHub Pages Prototype
+# Bogotá Verde AR — Final simplified WebAR prototype
 
-This version includes an iOS/mobile camera fix:
+This package contains a finished marker-based WebAR prototype for the project **Bogotá Verde AR**.
 
-- The AR scene starts only after the user taps **Start AR Experience**.
-- The camera video layer is forced to stay visible behind the AR canvas.
-- A **Camera Test** page is included to verify browser camera access.
+## Files
 
-## How to test on phone
+- `index.html`: main AR experience.
+- `marker.html`: official Hiro marker page.
+- `poster.html`: printable poster with QR code.
+- `camera-test.html`: camera permission test.
+- `styles.css`: visual design.
+- `app.js`: interaction logic.
+- `USER_MANUAL.md`: quick guide for presentation.
 
-1. Upload all files in this folder to the root of your GitHub Pages repository.
-2. Open the site with HTTPS.
-3. Open it directly in Safari or Chrome. Do not open it inside WhatsApp, Instagram, Facebook, Messenger or a translated page.
-4. Tap **Start AR Experience**.
-5. Allow camera access.
-6. Open or print `marker.html` on another device and scan the Hiro marker.
+## How to test on a phone
 
-If the camera still appears black, open `camera-test.html` first.
+1. Upload all files to GitHub Pages.
+2. Open the GitHub Pages URL on the phone using Safari or Chrome.
+3. Tap **Start AR**.
+4. Allow camera access.
+5. Open `marker.html` on another screen or print it.
+6. Point the phone camera at the full Hiro marker.
+
+If the 3D model does not appear, tap **Show demo without marker**. That mode is included only as a presentation fallback.
+
+## Important
+
+The AR marker must be the official Hiro marker. Do not use a custom marker image unless you also create a matching `.patt` pattern file.

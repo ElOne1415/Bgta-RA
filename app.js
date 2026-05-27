@@ -1,395 +1,362 @@
-const sections = {
-  welcome: {
-    icon: "🌿",
+const SECTIONS = [
+  {
+    key: "welcome",
     tag: "Welcome",
     title: "Explore Bogotá's public parks",
+    body: "Point your camera at the Hiro marker. A 3D public park scene appears on top of the marker and changes according to the section.",
+    bullets: ["Marker-based WebAR", "Designed for mobile devices", "No app installation required"],
     arTitle: "Bogota Verde AR",
-    arSubtitle: "Marker-based Web Augmented Reality",
-    arBody: "Move through the menu to explore parks, environmental care, public space rules, safety tips and a mini quiz.",
-    text: "Tap Start AR Experience, allow camera access, and point your phone at the Hiro marker. The 3D park scene appears anchored to the marker.",
-    bullets: ["Web-based experience", "No app installation required", "Designed for mobile devices and classroom presentation"],
-    color: "#0f5132",
+    arSubtitle: "Explore, learn and care",
+    arBody: "A WebAR experience to learn about parks, public space rules, safety and environmental care.",
+    color: "#064e3b",
     pins: true
   },
-  map: {
-    icon: "🗺️",
+  {
+    key: "map",
     tag: "Map",
-    title: "Representative public spaces",
-    arTitle: "Map of Public Spaces",
-    arSubtitle: "Bogota parks and urban meeting points",
-    arBody: "The AR scene highlights representative green spaces: Simon Bolivar Park, National Park and Los Novios Park.",
-    text: "This section presents a simplified map of public spaces in Bogotá. The floating markers indicate places that citizens can visit, care for and use responsibly.",
-    bullets: ["Parks as learning scenarios", "Public space as a shared resource", "AR markers support visual exploration"],
-    color: "#155e75",
+    title: "Representative parks in Bogotá",
+    body: "The prototype presents selected public parks as educational scenarios: Simón Bolívar Park, National Park and Los Novios Park.",
+    bullets: ["Location-based learning", "Public space awareness", "Interactive information points"],
+    arTitle: "Map of Parks",
+    arSubtitle: "Three learning scenarios",
+    arBody: "Floating pins identify selected parks and introduce their educational content.",
+    color: "#075985",
     pins: true
   },
-  simon: {
-    icon: "🌳",
-    tag: "Place information",
+  {
+    key: "simon",
+    tag: "Place",
     title: "Simón Bolívar Metropolitan Park",
+    body: "A large urban green area for recreation, events, walking, sports and environmental awareness activities.",
+    bullets: ["Respect green zones", "Use bins correctly", "Follow signs during crowded events"],
     arTitle: "Simon Bolivar Park",
-    arSubtitle: "Recreation, events and urban nature",
-    arBody: "A large green area for walking, resting, sports, cultural events and environmental awareness activities.",
-    text: "The user can access a short information card with the place name, location reference, main activities, services and visit recommendations.",
-    bullets: ["Use trash bins correctly", "Respect green zones and shared spaces", "Follow signs during crowded events"],
+    arSubtitle: "Recreation and urban nature",
+    arBody: "Use this park responsibly: keep it clean, respect shared areas and protect green spaces.",
     color: "#166534",
     focus: "pinA"
   },
-  national: {
-    icon: "🏞️",
-    tag: "Place information",
+  {
+    key: "national",
+    tag: "Place",
     title: "National Park",
+    body: "A traditional public space connected with urban memory, walking routes, culture and citizenship behavior.",
+    bullets: ["Protect trees and gardens", "Avoid damaging urban furniture", "Respect other visitors"],
     arTitle: "National Park",
-    arSubtitle: "History, culture and citizenship",
-    arBody: "A traditional public space connected with urban memory, walking routes, social meeting points and responsible coexistence.",
-    text: "This card connects the park with citizenship culture: respect, peaceful coexistence, care of furniture and responsible behavior in shared spaces.",
-    bullets: ["Protect trees and gardens", "Avoid damaging urban furniture", "Keep pets under control"],
+    arSubtitle: "History and citizenship culture",
+    arBody: "Public parks are shared spaces: coexistence, care and respect make them useful for everyone.",
     color: "#365314",
     focus: "pinB"
   },
-  novios: {
-    icon: "🚣",
-    tag: "Place information",
+  {
+    key: "novios",
+    tag: "Place",
     title: "Los Novios Park",
+    body: "A recreational park for walking, family plans and outdoor leisure activities that require responsible use.",
+    bullets: ["Respect pedestrian areas", "Avoid littering near water zones", "Use designated activity spaces"],
     arTitle: "Los Novios Park",
     arSubtitle: "Family recreation and leisure",
-    arBody: "A public space for leisure, walking, family plans and outdoor activities that require responsible use.",
-    text: "This section reinforces the idea that recreational spaces need rules, maintenance and citizen responsibility to remain safe and useful.",
-    bullets: ["Respect pedestrian areas", "Avoid littering near water zones", "Use designated activity spaces"],
+    arBody: "Responsible use keeps recreational spaces safe, clean and enjoyable for citizens and visitors.",
     color: "#0f766e",
     focus: "pinC"
   },
-  care: {
-    icon: "♻️",
-    tag: "Environmental care",
+  {
+    key: "care",
+    tag: "Environmental Care",
     title: "Care for green areas and wildlife",
+    body: "The AR scene uses trees, bins and signs to explain simple environmental habits in public parks.",
+    bullets: ["Separate recyclable waste", "Do not feed urban wildlife", "Leave the place cleaner than you found it"],
     arTitle: "Environmental Care",
-    arSubtitle: "Small actions protect public parks",
-    arBody: "Sort waste, protect trees, avoid stepping on gardens, do not feed wildlife and leave the place cleaner than you found it.",
-    text: "The AR content teaches responsible habits through visual elements: trees, bins, green zones and floating reminders.",
-    bullets: ["Separate recyclable and non-recyclable waste", "Use bins instead of leaving trash on the grass", "Respect urban fauna and vegetation"],
-    color: "#15803d",
-    pins: false
+    arSubtitle: "Small actions protect parks",
+    arBody: "Sort waste, protect trees, avoid stepping on gardens and respect urban fauna.",
+    color: "#15803d"
   },
-  rules: {
-    icon: "📌",
-    tag: "Public space rules",
+  {
+    key: "rules",
+    tag: "Rules",
     title: "Basic rules for shared spaces",
+    body: "Rules are transformed into visual and interactive learning elements instead of being only static text on a sign.",
+    bullets: ["Care for benches, signs and lights", "Keep pets under control", "Use cycling and pedestrian routes correctly"],
     arTitle: "Public Space Rules",
     arSubtitle: "Use the city responsibly",
-    arBody: "Respect pedestrian zones, cycling paths, gardens, signs, benches, playgrounds and common areas.",
-    text: "The purpose is not only to show information, but to transform rules into a visual and interactive learning object.",
-    bullets: ["Do not damage benches, signs or lights", "Keep pets controlled", "Use cycling paths and pedestrian routes correctly"],
-    color: "#7c2d12",
-    pins: false
+    arBody: "Respect common areas, gardens, routes, signs, benches and other visitors.",
+    color: "#7c2d12"
   },
-  safety: {
-    icon: "🛡️",
+  {
+    key: "safety",
     tag: "Safety",
     title: "Safe visits and orientation",
+    body: "The experience gives simple safety recommendations for citizens and visitors before and during a park visit.",
+    bullets: ["Identify meeting points", "Protect personal belongings", "Avoid isolated areas at night"],
     arTitle: "Safety Tips",
     arSubtitle: "Plan, observe and stay aware",
-    arBody: "Identify meeting points, follow signs, protect personal objects and avoid isolated areas at night.",
-    text: "This section gives simple recommendations that make the experience useful for citizens and visitors before and during a park visit.",
-    bullets: ["Share your location with companions", "Check entry and exit points", "Follow official signs and staff instructions"],
-    color: "#1d4ed8",
-    pins: false
+    arBody: "Follow official signs, check entry points, stay with your group and protect personal objects.",
+    color: "#1d4ed8"
   },
-  quiz: {
-    icon: "✅",
-    tag: "Mini quiz",
+  {
+    key: "quiz",
+    tag: "Mini Quiz",
     title: "Learning check",
+    body: "Answer short questions to verify if the AR experience was clear and useful for learning.",
+    bullets: ["Immediate feedback", "Short questions", "Useful for classroom evaluation"],
     arTitle: "Mini Quiz",
     arSubtitle: "Test what you learned",
-    arBody: "Answer the questions on the screen. The quiz checks environmental care, public space rules and safe behavior.",
-    text: "The mini quiz helps evaluate if the AR experience was clear and useful for learning.",
-    bullets: ["Immediate feedback", "Short questions", "Designed for classroom evaluation"],
+    arBody: "Use the screen questions to review environmental care, safety and public space rules.",
     color: "#581c87",
-    pins: false,
     quiz: true
   }
-};
-
-const quizQuestions = [
-  { q: "What should you do with waste in a public park?", options: ["Leave it near a tree", "Use the correct bin", "Hide it under a bench"], correct: 1, feedback: "Correct. Responsible waste management protects the park and other visitors." },
-  { q: "Which behavior helps protect green areas?", options: ["Walking only on permitted paths", "Damaging plants for photos", "Feeding all animals"], correct: 0, feedback: "Correct. Using permitted paths reduces damage to gardens and vegetation." },
-  { q: "What is a safe action during a visit?", options: ["Ignore signage", "Identify meeting points", "Go alone to isolated zones at night"], correct: 1, feedback: "Correct. Meeting points and signs improve orientation and safety." },
-  { q: "Why is AR useful in this project?", options: ["It only decorates the page", "It turns information into interactive visual learning", "It replaces all park rules"], correct: 1, feedback: "Correct. AR supports visual, interactive and contextual learning." }
 ];
 
-let currentSection = "welcome";
+const QUIZ = [
+  {
+    question: "What should you do with waste in a public park?",
+    options: ["Leave it near a tree", "Use the correct bin", "Hide it under a bench"],
+    correct: 1
+  },
+  {
+    question: "Which action protects green areas?",
+    options: ["Walking on permitted paths", "Damaging plants for photos", "Feeding all animals"],
+    correct: 0
+  },
+  {
+    question: "What is a safe action during a visit?",
+    options: ["Ignore signs", "Identify meeting points", "Go alone to isolated areas at night"],
+    correct: 1
+  }
+];
+
+let started = false;
+let current = 0;
+let markerDetected = false;
+let demoMode = false;
 let quizIndex = 0;
 let quizAnswered = false;
-let sceneStarted = false;
-let cameraCheckTimer = null;
+let arBound = false;
 
-const startPanel = document.getElementById("startPanel");
-const startBtn = document.getElementById("startBtn");
-const resetBtn = document.getElementById("resetBtn");
-const menuButtons = document.getElementById("menuButtons");
-const trackingBadge = document.getElementById("trackingBadge");
-const quizPanel = document.getElementById("quizPanel");
-const sceneMount = document.getElementById("sceneMount");
-const sceneTemplate = document.getElementById("arSceneTemplate");
-const helpText = document.getElementById("helpText");
-
-const ui = {
-  tag: document.getElementById("sectionTag"),
-  title: document.getElementById("sectionTitle"),
-  text: document.getElementById("sectionText"),
-  bullets: document.getElementById("sectionBullets"),
+const els = {
+  startScreen: document.getElementById("startScreen"),
+  startBtn: document.getElementById("startBtn"),
+  ui: document.getElementById("ui"),
+  statusBadge: document.getElementById("statusBadge"),
+  topTitle: document.getElementById("topTitle"),
+  guideText: document.getElementById("guideText"),
+  demoBtn: document.getElementById("demoBtn"),
+  markerHelp: document.getElementById("markerHelp"),
+  contentCard: document.getElementById("contentCard"),
+  sectionTag: document.getElementById("sectionTag"),
+  sectionTitle: document.getElementById("sectionTitle"),
+  sectionBody: document.getElementById("sectionBody"),
+  sectionBullets: document.getElementById("sectionBullets"),
+  counter: document.getElementById("counter"),
+  quizPanel: document.getElementById("quizPanel"),
+  prevBtn: document.getElementById("prevBtn"),
+  nextBtn: document.getElementById("nextBtn"),
+  menuBtn: document.getElementById("menuBtn"),
+  menuSheet: document.getElementById("menuSheet"),
+  closeMenu: document.getElementById("closeMenu"),
+  sectionButtons: document.getElementById("sectionButtons"),
+  sceneMount: document.getElementById("sceneMount"),
+  template: document.getElementById("arSceneTemplate"),
   arTitle: null,
   arSubtitle: null,
   arBody: null,
-  cardBack: null,
-  grassBase: null,
+  panelBack: null,
   pins: [],
-  arRoot: null
+  demoWorld: null,
+  demoTitle: null,
+  demoSubtitle: null,
+  demoBody: null,
+  demoPanelBack: null
 };
 
 function init() {
   createMenu();
-  setSection("welcome");
+  updateText();
+  els.startBtn.addEventListener("click", startAR);
+  els.prevBtn.addEventListener("click", () => move(-1));
+  els.nextBtn.addEventListener("click", () => move(1));
+  els.menuBtn.addEventListener("click", () => els.menuSheet.classList.remove("hidden"));
+  els.closeMenu.addEventListener("click", () => els.menuSheet.classList.add("hidden"));
+  els.demoBtn.addEventListener("click", toggleDemoMode);
+  els.markerHelp.addEventListener("click", () => window.open("marker.html", "_blank"));
 
-  startBtn.addEventListener("click", startExperience, { once: true });
-  resetBtn.addEventListener("click", () => setSection("welcome"));
-
-  if (location.protocol !== "https:" && !location.hostname.includes("localhost")) {
-    startPanel.querySelector(".start-note").textContent = "Camera access on mobile requires HTTPS. Upload this project to GitHub Pages before testing on a phone.";
+  if (location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
+    els.guideText.textContent = "Warning: mobile camera requires HTTPS. Upload the project to GitHub Pages before testing on a phone.";
   }
 }
 
-function startExperience() {
-  document.body.classList.add("is-started");
-  startPanel.classList.add("hidden");
-  setTracking("starting");
-  helpText.textContent = "If the camera is black, open this page directly in Safari/Chrome and disable page translation.";
-  mountScene();
+function startAR() {
+  if (started) return;
+  started = true;
+  els.startScreen.classList.add("hidden");
+  els.ui.classList.remove("is-hidden");
+  setStatus("waiting", "Looking for marker");
+  els.sceneMount.appendChild(els.template.content.cloneNode(true));
+
+  setTimeout(bindAR, 1200);
 }
 
-function mountScene() {
-  if (sceneStarted) return;
-  sceneStarted = true;
-  sceneMount.appendChild(sceneTemplate.content.cloneNode(true));
+function bindAR() {
+  if (arBound) return;
 
-  const scene = document.getElementById("arScene");
-  scene.addEventListener("loaded", () => {
-    bindArRefs();
-    bindMarkerEvents();
-    setSection(currentSection);
-    setTracking("waiting");
-    forceCameraVideoVisible();
-    startCameraDiagnostics();
-  });
+  els.arTitle = document.getElementById("arTitle");
+  els.arSubtitle = document.getElementById("arSubtitle");
+  els.arBody = document.getElementById("arBody");
+  els.panelBack = document.getElementById("panelBack");
+  els.demoWorld = document.getElementById("demoWorld");
+  els.demoTitle = document.getElementById("demoTitle");
+  els.demoSubtitle = document.getElementById("demoSubtitle");
+  els.demoBody = document.getElementById("demoBody");
+  els.demoPanelBack = document.getElementById("demoPanelBack");
+  els.pins = ["pinA", "pinB", "pinC"].map(id => document.getElementById(id)).filter(Boolean);
 
-  // In case the scene loaded event fires very quickly on some mobile browsers.
+  const marker = document.getElementById("hiroMarker");
+  if (marker) {
+    marker.addEventListener("markerFound", () => {
+      markerDetected = true;
+      if (demoMode) toggleDemoMode(false);
+      setStatus("detected", "Marker detected");
+      els.guideText.textContent = "Good. The 3D park is anchored to the Hiro marker.";
+    });
+    marker.addEventListener("markerLost", () => {
+      markerDetected = false;
+      setStatus("waiting", "Looking for marker");
+      els.guideText.textContent = "Move the phone back 30–50 cm. Keep the marker flat, complete and well lit.";
+    });
+  }
+
+  arBound = true;
+  updateText();
+
   setTimeout(() => {
-    if (!ui.arRoot) {
-      bindArRefs();
-      bindMarkerEvents();
-      setSection(currentSection);
-      forceCameraVideoVisible();
-      startCameraDiagnostics();
+    if (!markerDetected && !demoMode) {
+      els.guideText.textContent = "If nothing appears, the marker is not being detected. Open marker.html on another screen or print it, then keep it flat and fully visible.";
     }
-  }, 1400);
-}
-
-function bindArRefs() {
-  ui.arTitle = document.getElementById("arTitle");
-  ui.arSubtitle = document.getElementById("arSubtitle");
-  ui.arBody = document.getElementById("arBody");
-  ui.cardBack = document.getElementById("cardBack");
-  ui.grassBase = document.getElementById("grassBase");
-  ui.pins = [document.getElementById("pinA"), document.getElementById("pinB"), document.getElementById("pinC")].filter(Boolean);
-  ui.arRoot = document.getElementById("arRoot");
+  }, 7000);
 }
 
 function createMenu() {
-  Object.entries(sections).forEach(([key, section]) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.section = key;
-    button.innerHTML = `<span aria-hidden="true">${section.icon}</span><span>${section.tag}</span>`;
-    button.addEventListener("click", () => setSection(key));
-    menuButtons.appendChild(button);
+  SECTIONS.forEach((s, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = `${i + 1}. ${s.tag}`;
+    btn.addEventListener("click", () => {
+      current = i;
+      quizIndex = 0;
+      quizAnswered = false;
+      updateText();
+      els.menuSheet.classList.add("hidden");
+    });
+    els.sectionButtons.appendChild(btn);
   });
 }
 
-function setSection(key) {
-  currentSection = key;
-  const section = sections[key];
+function move(direction) {
+  current = (current + direction + SECTIONS.length) % SECTIONS.length;
+  quizIndex = 0;
+  quizAnswered = false;
+  updateText();
+}
 
-  ui.tag.textContent = section.tag;
-  ui.title.textContent = section.title;
-  ui.text.textContent = section.text;
-  ui.bullets.innerHTML = section.bullets.map(item => `<li>${item}</li>`).join("");
+function updateText() {
+  const s = SECTIONS[current];
+  els.topTitle.textContent = s.title;
+  els.sectionTag.textContent = s.tag;
+  els.sectionTitle.textContent = s.title;
+  els.sectionBody.textContent = s.body;
+  els.counter.textContent = `${current + 1} / ${SECTIONS.length}`;
+  els.sectionBullets.innerHTML = s.bullets.map(item => `<li>${item}</li>`).join("");
 
-  if (ui.arTitle && ui.cardBack) {
-    ui.arTitle.setAttribute("value", section.arTitle);
-    ui.arSubtitle.setAttribute("value", section.arSubtitle);
-    ui.arBody.setAttribute("value", section.arBody);
-    ui.cardBack.setAttribute("material", `color: ${section.color}; opacity: 0.94; transparent: true`);
-    setPins(section);
-    animateRoot();
-  }
-
-  updateMenuState(key);
-
-  if (section.quiz) {
-    quizPanel.classList.remove("hidden");
-    quizIndex = 0;
-    quizAnswered = false;
+  if (s.quiz) {
+    els.quizPanel.classList.remove("hidden");
     renderQuiz();
   } else {
-    quizPanel.classList.add("hidden");
-    quizPanel.innerHTML = "";
+    els.quizPanel.classList.add("hidden");
+    els.quizPanel.innerHTML = "";
+  }
+
+  if (els.arTitle) {
+    els.arTitle.setAttribute("value", s.arTitle);
+    els.arSubtitle.setAttribute("value", s.arSubtitle);
+    els.arBody.setAttribute("value", s.arBody);
+    els.panelBack.setAttribute("material", `color:${s.color}; opacity:0.95; transparent:true`);
+    updatePins(s);
+  }
+
+  if (els.demoTitle) {
+    els.demoTitle.setAttribute("value", s.arTitle);
+    els.demoSubtitle.setAttribute("value", s.arSubtitle);
+    els.demoBody.setAttribute("value", s.arBody);
+    els.demoPanelBack.setAttribute("material", `color:${s.color}; opacity:0.95; transparent:true`);
   }
 }
 
-function setPins(section) {
-  if (!ui.pins.length) return;
-  ui.pins.forEach(pin => {
+function updatePins(section) {
+  els.pins.forEach(pin => {
     pin.setAttribute("visible", section.pins || section.focus ? "true" : "false");
-    pin.setAttribute("scale", "0.85 0.85 0.85");
+    pin.setAttribute("scale", "1 1 1");
   });
-
   if (section.focus) {
-    ui.pins.forEach(pin => {
+    els.pins.forEach(pin => {
       if (pin.id !== section.focus) pin.setAttribute("visible", "false");
     });
     const focused = document.getElementById(section.focus);
-    if (focused) {
-      focused.setAttribute("visible", "true");
-      focused.setAttribute("scale", "1.35 1.35 1.35");
-    }
+    if (focused) focused.setAttribute("scale", "1.35 1.35 1.35");
   }
-}
-
-function updateMenuState(key) {
-  document.querySelectorAll(".menu-buttons button").forEach(button => {
-    button.classList.toggle("is-active", button.dataset.section === key);
-  });
-}
-
-function animateRoot() {
-  if (!ui.arRoot) return;
-  ui.arRoot.removeAttribute("animation__pulse");
-  ui.arRoot.setAttribute("animation__pulse", {
-    property: "scale",
-    from: "0.96 0.96 0.96",
-    to: "1 1 1",
-    dur: 280,
-    easing: "easeOutQuad"
-  });
 }
 
 function renderQuiz() {
-  const item = quizQuestions[quizIndex];
-  quizPanel.innerHTML = `
-    <p class="quiz-question">${quizIndex + 1}. ${item.q}</p>
+  const q = QUIZ[quizIndex];
+  els.quizPanel.innerHTML = `
+    <p class="quiz-count">Question ${quizIndex + 1} of ${QUIZ.length}</p>
+    <p class="quiz-question">${q.question}</p>
     <div class="quiz-options">
-      ${item.options.map((option, index) => `<button type="button" data-option="${index}">${option}</button>`).join("")}
+      ${q.options.map((opt, i) => `<button type="button" data-answer="${i}">${opt}</button>`).join("")}
     </div>
-    <p class="quiz-feedback hidden"></p>
+    <p id="quizFeedback" class="quiz-feedback"></p>
   `;
-
-  quizPanel.querySelectorAll("[data-option]").forEach(button => {
-    button.addEventListener("click", () => answerQuiz(Number(button.dataset.option)));
+  els.quizPanel.querySelectorAll("button[data-answer]").forEach(btn => {
+    btn.addEventListener("click", () => answerQuiz(Number(btn.dataset.answer)));
   });
 }
 
-function answerQuiz(answerIndex) {
+function answerQuiz(answer) {
   if (quizAnswered) return;
   quizAnswered = true;
-
-  const item = quizQuestions[quizIndex];
-  const buttons = quizPanel.querySelectorAll("[data-option]");
-  const feedback = quizPanel.querySelector(".quiz-feedback");
-
-  buttons.forEach((button, index) => {
-    button.disabled = true;
-    if (index === item.correct) button.classList.add("correct");
-    if (index === answerIndex && answerIndex !== item.correct) button.classList.add("wrong");
+  const q = QUIZ[quizIndex];
+  const feedback = document.getElementById("quizFeedback");
+  const buttons = els.quizPanel.querySelectorAll("button[data-answer]");
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add("correct");
+    if (i === answer && i !== q.correct) btn.classList.add("wrong");
   });
 
-  feedback.classList.remove("hidden");
-  feedback.textContent = answerIndex === item.correct ? item.feedback : `Review: ${item.feedback}`;
+  feedback.textContent = answer === q.correct ? "Correct. Good public space behavior protects everyone." : "Not quite. Review the information and try the next one.";
 
-  const next = document.createElement("button");
-  next.type = "button";
-  next.className = "quiz-next";
-  next.textContent = quizIndex < quizQuestions.length - 1 ? "Next question" : "Restart quiz";
-  next.addEventListener("click", () => {
-    quizIndex = quizIndex < quizQuestions.length - 1 ? quizIndex + 1 : 0;
+  setTimeout(() => {
+    quizIndex = (quizIndex + 1) % QUIZ.length;
     quizAnswered = false;
     renderQuiz();
-  });
-  quizPanel.appendChild(next);
+  }, 1800);
 }
 
-function bindMarkerEvents() {
-  const marker = document.getElementById("hiroMarker");
-  if (!marker || marker.dataset.bound) return;
-  marker.dataset.bound = "true";
-  marker.addEventListener("markerFound", () => setTracking("visible"));
-  marker.addEventListener("markerLost", () => setTracking("lost"));
-}
-
-function setTracking(state) {
-  trackingBadge.className = "tracking-badge";
-  if (state === "starting") {
-    trackingBadge.textContent = "Starting camera";
-    trackingBadge.classList.add("is-waiting");
-  } else if (state === "visible") {
-    trackingBadge.textContent = "Marker detected";
-    trackingBadge.classList.add("is-visible");
-  } else if (state === "lost") {
-    trackingBadge.textContent = "Marker lost";
-    trackingBadge.classList.add("is-lost");
-  } else if (state === "camera-error") {
-    trackingBadge.textContent = "Camera not visible";
-    trackingBadge.classList.add("is-error");
+function toggleDemoMode(force) {
+  demoMode = typeof force === "boolean" ? force : !demoMode;
+  if (els.demoWorld) els.demoWorld.setAttribute("visible", demoMode ? "true" : "false");
+  els.demoBtn.textContent = demoMode ? "Hide demo mode" : "Show demo without marker";
+  if (demoMode) {
+    setStatus("demo", "Demo mode");
+    els.guideText.textContent = "Demo mode shows the 3D content without marker. Use it only if the marker is not detected during presentation.";
+  } else if (markerDetected) {
+    setStatus("detected", "Marker detected");
   } else {
-    trackingBadge.textContent = "Searching marker";
-    trackingBadge.classList.add("is-waiting");
+    setStatus("waiting", "Looking for marker");
   }
 }
 
-function forceCameraVideoVisible() {
-  const apply = () => {
-    document.querySelectorAll("video, .arjs-video, #arjs-video").forEach(video => {
-      video.setAttribute("playsinline", "true");
-      video.setAttribute("webkit-playsinline", "true");
-      Object.assign(video.style, {
-        position: "fixed",
-        top: "0",
-        left: "0",
-        width: "100vw",
-        height: "100vh",
-        objectFit: "cover",
-        zIndex: "0",
-        opacity: "1",
-        visibility: "visible",
-        display: "block",
-        background: "#000"
-      });
-    });
-  };
-  apply();
-  const interval = setInterval(apply, 800);
-  setTimeout(() => clearInterval(interval), 10000);
+function setStatus(type, text) {
+  els.statusBadge.className = `status ${type}`;
+  els.statusBadge.textContent = text;
 }
 
-function startCameraDiagnostics() {
-  clearTimeout(cameraCheckTimer);
-  cameraCheckTimer = setTimeout(() => {
-    const video = Array.from(document.querySelectorAll("video")).find(v => v.videoWidth > 0 || v.readyState >= 2);
-    if (!video) {
-      setTracking("camera-error");
-      helpText.textContent = "Camera did not start. Open directly in Safari/Chrome, turn off translation, then reload and allow camera again.";
-      ui.text.textContent = "The AR interface loaded, but the camera video is not visible. This usually happens when the page is opened inside an app browser, translated page, or a browser blocks the webcam. Use the Camera Test button to verify the phone camera first.";
-    }
-  }, 6500);
-}
-
-document.addEventListener("DOMContentLoaded", init);
+init();

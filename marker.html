@@ -4,103 +4,36 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hiro Marker | Bogotá Verde AR</title>
-  <link rel="stylesheet" href="styles.css" />
   <style>
-    body {
-      overflow: auto;
-      min-height: 100vh;
-      color: #0f172a;
-      background: #f8fafc;
-    }
-    body::before { display: none; }
-    .marker-page {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 22px;
-    }
-    .marker-card {
-      width: min(760px, 100%);
-      background: #ffffff;
-      border-radius: 26px;
-      box-shadow: 0 25px 80px rgba(15, 23, 42, .14);
-      padding: clamp(16px, 4vw, 34px);
-      text-align: center;
-    }
-    .marker-title {
-      margin: 0 0 8px;
-      color: #052e1a;
-      font-size: clamp(1.6rem, 5vw, 2.4rem);
-    }
-    .marker-subtitle {
-      color: #475569;
-      margin: 0 0 22px;
-      line-height: 1.5;
-    }
-    .marker-frame {
-      width: min(560px, 86vw);
-      aspect-ratio: 1;
-      margin: 0 auto 20px;
-      display: grid;
-      place-items: center;
-      background: #fff;
-    }
-    .hiro-marker {
-      width: 100%;
-      height: 100%;
-    }
-    .marker-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 14px;
-    }
-    .marker-actions a, .marker-actions button {
-      border: 0;
-      border-radius: 999px;
-      padding: 12px 16px;
-      background: #0f5132;
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-      font-weight: 800;
-    }
-    .print-note {
-      color: #64748b;
-      font-size: .95rem;
-      line-height: 1.5;
-      max-width: 600px;
-      margin: 12px auto 0;
-    }
-    @media print {
-      .marker-title, .marker-subtitle, .marker-actions, .print-note { display: none; }
-      .marker-card { box-shadow: none; padding: 0; }
-      .marker-frame { width: 17cm; height: 17cm; }
-    }
+    :root { color-scheme: light; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background: #f7f7f2; color: #111827; }
+    main { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
+    .page { width: min(900px, 100%); background: white; border-radius: 24px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,.12); text-align: center; }
+    h1 { margin: 0 0 8px; font-size: clamp(2rem, 8vw, 4rem); }
+    p { color: #4b5563; font-size: 1.05rem; line-height: 1.4; }
+    .marker-frame { margin: 22px auto; width: min(75vw, 620px); background: white; border: 12px solid white; }
+    .marker-frame img { display: block; width: 100%; height: auto; }
+    .tips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+    .tips div { background: #ecfdf5; border: 1px solid #bbf7d0; padding: 12px; border-radius: 16px; font-weight: 700; }
+    .print { margin-top: 18px; display: inline-block; border: 0; border-radius: 999px; background: #166534; color: white; padding: 13px 18px; font-weight: 900; text-decoration: none; }
+    @media print { body { background: white; } .page { box-shadow: none; } .tips, .print, p { display: none; } .marker-frame { width: 16cm; } }
+    @media (max-width: 620px) { .tips { grid-template-columns: 1fr; } .marker-frame { width: 88vw; } }
   </style>
 </head>
 <body>
-  <main class="marker-page">
-    <section class="marker-card">
-      <h1 class="marker-title">Hiro Marker</h1>
-      <p class="marker-subtitle">Show or print this marker. Open the AR experience on your phone and point the camera at this image.</p>
-      <div class="marker-frame" aria-label="Hiro augmented reality marker">
-        <svg class="hiro-marker" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hiroTitle hiroDesc">
-          <title id="hiroTitle">Hiro marker</title>
-          <desc id="hiroDesc">Black square marker with white center and the word Hiro.</desc>
-          <rect width="1000" height="1000" fill="#ffffff"/>
-          <rect x="70" y="70" width="860" height="860" fill="#000000"/>
-          <rect x="300" y="285" width="430" height="430" fill="#ffffff"/>
-          <text x="515" y="640" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="210" fill="#000000">Hiro</text>
-        </svg>
+  <main>
+    <section class="page">
+      <h1>Hiro Marker</h1>
+      <p>Use this official Hiro marker. Keep it flat, complete, well lit and at least 30–50 cm from the phone camera.</p>
+      <div class="marker-frame">
+        <img alt="Official Hiro marker for AR.js" src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" />
       </div>
-      <p class="print-note">For best tracking: keep it flat, avoid reflections, use good lighting, and keep the camera around 30–50 cm away.</p>
-      <div class="marker-actions">
-        <a href="index.html">Open AR experience</a>
-        <button type="button" onclick="window.print()">Print marker</button>
-        <a href="poster.html">Open poster + QR</a>
+      <div class="tips">
+        <div>Do not crop it</div>
+        <div>Do not cover the black border</div>
+        <div>Print it or show it full screen</div>
       </div>
+      <button class="print" onclick="window.print()">Print marker</button>
     </section>
   </main>
 </body>
