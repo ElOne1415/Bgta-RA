@@ -141,6 +141,7 @@ const els = {
   guideText: document.getElementById("guideText"),
   demoBtn: document.getElementById("demoBtn"),
   markerHelp: document.getElementById("markerHelp"),
+  focusBtn: document.getElementById("focusBtn"),
   contentCard: document.getElementById("contentCard"),
   sectionTag: document.getElementById("sectionTag"),
   sectionTitle: document.getElementById("sectionTitle"),
@@ -178,6 +179,7 @@ function init() {
   els.closeMenu.addEventListener("click", () => els.menuSheet.classList.add("hidden"));
   els.demoBtn.addEventListener("click", toggleDemoMode);
   els.markerHelp.addEventListener("click", () => window.open("marker.html", "_blank"));
+  els.focusBtn.addEventListener("click", toggleFocusMode);
 
   if (location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
     els.guideText.textContent = "Warning: mobile camera requires HTTPS. Upload the project to GitHub Pages before testing on a phone.";
@@ -357,6 +359,11 @@ function toggleDemoMode(force) {
 function setStatus(type, text) {
   els.statusBadge.className = `status ${type}`;
   els.statusBadge.textContent = text;
+}
+
+function toggleFocusMode() {
+  document.body.classList.toggle("focus-mode");
+  els.focusBtn.textContent = document.body.classList.contains("focus-mode") ? "Show menu" : "Full AR view";
 }
 
 init();

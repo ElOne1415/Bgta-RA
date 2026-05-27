@@ -92,17 +92,22 @@ canvas.a-canvas { z-index: 1 !important; }
 .status.detected { background: #86efac; }
 .status.demo { background: #93c5fd; }
 
-.marker-help {
+.quick-actions {
   position: absolute;
   top: calc(max(14px, env(safe-area-inset-top)) + 92px);
   right: 14px;
+  display: flex;
+  gap: 8px;
+}
+.quick-actions button {
   border: 1px solid var(--line);
   background: rgba(15, 23, 42, .72);
   color: var(--text);
   border-radius: 999px;
   padding: 10px 14px;
-  font-weight: 800;
+  font-weight: 900;
 }
+#focusBtn { background: rgba(250, 204, 21, .92); color: #111827; }
 .guide-box {
   position: absolute;
   left: 14px;
@@ -186,4 +191,18 @@ ul { margin: 8px 0 12px 20px; padding: 0; }
   .content-card h3 { font-size: 1.1rem; }
   .content-card p, .content-card li { font-size: .92rem; }
   .section-buttons { grid-template-columns: 1fr; }
+}
+
+
+/* Emergency presentation view: hides menus so the marker-based 3D object can be seen clearly. */
+body.focus-mode .guide-box,
+body.focus-mode .content-card,
+body.focus-mode .menu-sheet { display: none !important; }
+body.focus-mode .topbar { opacity: .88; transform: scale(.92); transform-origin: top left; }
+body.focus-mode .quick-actions { top: calc(max(14px, env(safe-area-inset-top)) + 76px); }
+
+@media (max-width: 560px) {
+  .content-card { max-height: 34vh; }
+  .guide-box { top: calc(max(14px, env(safe-area-inset-top)) + 120px); }
+  .quick-actions { top: calc(max(14px, env(safe-area-inset-top)) + 82px); }
 }
