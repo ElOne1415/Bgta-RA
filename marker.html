@@ -3,38 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hiro Marker | Bogotá Verde AR</title>
+  <title>Hiro Marker - Bogotá Verde AR</title>
   <style>
-    :root { color-scheme: light; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background: #f7f7f2; color: #111827; }
-    main { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
-    .page { width: min(900px, 100%); background: white; border-radius: 24px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,.12); text-align: center; }
-    h1 { margin: 0 0 8px; font-size: clamp(2rem, 8vw, 4rem); }
-    p { color: #4b5563; font-size: 1.05rem; line-height: 1.4; }
-    .marker-frame { margin: 22px auto; width: min(75vw, 620px); background: white; border: 12px solid white; }
-    .marker-frame img { display: block; width: 100%; height: auto; }
-    .tips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
-    .tips div { background: #ecfdf5; border: 1px solid #bbf7d0; padding: 12px; border-radius: 16px; font-weight: 700; }
-    .print { margin-top: 18px; display: inline-block; border: 0; border-radius: 999px; background: #166534; color: white; padding: 13px 18px; font-weight: 900; text-decoration: none; }
-    @media print { body { background: white; } .page { box-shadow: none; } .tips, .print, p { display: none; } .marker-frame { width: 16cm; } }
-    @media (max-width: 620px) { .tips { grid-template-columns: 1fr; } .marker-frame { width: 88vw; } }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f4f7f3; font-family: system-ui, sans-serif; color: #0a2f1d; }
+    .page { width: min(900px, 96vw); text-align: center; padding: 24px; }
+    h1 { margin-bottom: 8px; }
+    p { color: #46564d; font-size: 18px; }
+    .marker-wrap { margin: 22px auto; padding: 22px; background: white; border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); }
+    img { width: min(680px, 86vw); display: block; margin: auto; image-rendering: auto; }
+    .tip { font-weight: 800; color: #063d26; }
+    @media print { body { background: white; } .marker-wrap { box-shadow: none; } p { display: none; } }
   </style>
 </head>
 <body>
-  <main>
-    <section class="page">
-      <h1>Hiro Marker</h1>
-      <p>Use this official Hiro marker. Keep it flat, complete, well lit and at least 30–50 cm from the phone camera.</p>
-      <div class="marker-frame">
-        <img alt="Official Hiro marker for AR.js" src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" />
-      </div>
-      <div class="tips">
-        <div>Do not crop it</div>
-        <div>Do not cover the black border</div>
-        <div>Print it or show it full screen</div>
-      </div>
-      <button class="print" onclick="window.print()">Print marker</button>
-    </section>
+  <main class="page">
+    <h1>Hiro Marker</h1>
+    <p>Show or print this marker. Open the AR experience on your phone and point the camera at this image.</p>
+    <div class="marker-wrap">
+      <img src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" alt="Official Hiro marker" />
+    </div>
+    <p class="tip">Keep it complete, flat, visible and well lit. Do not crop the black border.</p>
   </main>
 </body>
 </html>
