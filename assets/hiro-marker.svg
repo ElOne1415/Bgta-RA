@@ -1,0 +1,6 @@
+<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1000" height="1000" fill="#ffffff"/>
+  <rect x="70" y="70" width="860" height="860" fill="#000000"/>
+  <rect x="300" y="285" width="430" height="430" fill="#ffffff"/>
+  <text x="515" y="640" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="210" fill="#000000">Hiro</text>
+</svg>
