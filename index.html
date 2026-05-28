@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#052b1f" />
+  <title>Bogotá Verde AR - Poster Experience</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <video id="camera" class="camera-feed" autoplay muted playsinline webkit-playsinline></video>
+    <div id="fallbackBackground" class="fallback-background"></div>
+
+    <section id="startScreen" class="start-screen">
+      <div class="start-card">
+        <div class="kicker">BOGOTÁ VERDE AR</div>
+        <h1>Poster-based Augmented Reality</h1>
+        <p>Scan a park poster QR or choose a park. The camera opens and digital AR elements appear over the real poster/environment.</p>
+        <button id="startCameraBtn" class="primary-btn">Start AR camera</button>
+        <button id="demoBtn" class="secondary-btn">Open without camera</button>
+        <p class="microcopy">Use Safari/Chrome over HTTPS. On iPhone, tap the button after allowing camera access.</p>
+      </div>
+    </section>
+
+    <header class="top-bar">
+      <div>
+        <span class="eyebrow">UNIVERSIDAD MANUELA BELTRÁN · INTERFACES</span>
+        <h2 id="parkTitle">Bogotá Verde AR</h2>
+      </div>
+      <button id="posterReady" class="status-pill">QR poster loaded</button>
+    </header>
+
+    <section class="poster-guide" id="posterGuide">
+      <div class="guide-frame">
+        <span>Place the printed poster here</span>
+      </div>
+    </section>
+
+    <section id="arLayer" class="ar-layer" aria-label="Augmented reality content">
+      <div class="ar-shadow"></div>
+      <div id="arModel" class="ar-model model-simon" role="img" aria-label="3D AR model of the selected park">
+        <div class="ground-grid"></div>
+        <div class="lake"></div>
+        <div class="path path-one"></div>
+        <div class="path path-two"></div>
+        <div class="pin"></div>
+        <div class="bench bench-a"></div>
+        <div class="bench bench-b"></div>
+        <div class="tree tree-a"><span></span></div>
+        <div class="tree tree-b"><span></span></div>
+        <div class="tree tree-c"><span></span></div>
+        <div class="tree tree-d"><span></span></div>
+        <div class="monument"></div>
+        <div class="water-bird bird-a"></div>
+        <div class="water-bird bird-b"></div>
+      </div>
+
+      <button class="hotspot hotspot-left" id="factHotspot">Fact</button>
+      <button class="hotspot hotspot-right" id="missionHotspot">Mission</button>
+      <button class="hotspot hotspot-bottom" id="quizHotspot">Quiz</button>
+    </section>
+
+    <section class="info-panel" id="infoPanel">
+      <div class="panel-head">
+        <span id="panelTag">WELCOME</span>
+        <button id="closePanel" aria-label="Close panel">×</button>
+      </div>
+      <h3 id="panelTitle">Explore Bogotá's public parks</h3>
+      <p id="panelText">Choose a poster or scan a QR code to load AR content.</p>
+      <ul id="panelBullets"></ul>
+    </section>
+
+    <nav class="bottom-controls" aria-label="AR controls">
+      <button id="parkBtn">Change park</button>
+      <button id="infoBtn">Info</button>
+      <button id="missionBtn">Mission</button>
+      <button id="quizBtn">Quiz</button>
+    </nav>
+
+    <section id="parkDrawer" class="drawer" aria-hidden="true">
+      <div class="drawer-card">
+        <div class="panel-head">
+          <span>SELECT POSTER</span>
+          <button id="closeDrawer" aria-label="Close menu">×</button>
+        </div>
+        <button class="park-option" data-park="simon">Simón Bolívar Metropolitan Park</button>
+        <button class="park-option" data-park="national">National Park Enrique Olaya Herrera</button>
+        <button class="park-option" data-park="novios">Parque de los Novios / El Lago</button>
+        <a class="poster-link" href="posters_qr.html">Open printable QR posters</a>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
